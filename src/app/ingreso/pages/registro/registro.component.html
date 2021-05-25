@@ -1,0 +1,77 @@
+<div [ngClass]="showSpinner ? 'bodyShadow' : 'container'">
+    <form [formGroup]='formGroup' (ngSubmit)="registroWithEmailAndPassword()">
+      <div class="row">
+        <div class="col-md-12 mb-5">
+          <h2>Registro sala de juegos</h2>
+        </div>
+      </div>
+      <div class="row formulario">
+        <div class="col-md-6 mb-3">
+          <label for="nombre" class="form-label">Nombre</label>
+          <input type="text" class="form-control" id="nombre" placeholder="Ingrese nombre" formControlName="nombre">
+          <small class="invalid" *ngIf="formGroup.get('nombre').errors?.required && formGroup.get('nombre').touched">El nombre es requerido</small>
+          <small class="invalid" *ngIf="formGroup.get('nombre').errors?.contieneEspacios && formGroup.get('nombre').touched">El nombre no puede tener espacios</small>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label for="apellido" class="form-label">Apellido</label>
+          <input type="text" class="form-control" id="apellido" placeholder="Ingrese apellido" formControlName="apellido">
+          <small class="invalid" *ngIf="formGroup.get('apellido').errors?.required  && formGroup.get('apellido').touched">El apellido es requerido</small>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label for="edad" class="form-label">Edad</label>
+          <input type="number" class="form-control" id="edad" placeholder="Ingrese edad" formControlName="edad">
+          <small class="invalid" *ngIf="formGroup.get('edad').errors?.required  && formGroup.get('edad').touched">La edad es requerida</small>
+          <small class="invalid" *ngIf="(formGroup.get('edad').errors?.min || formGroup.get('edad').errors?.max )&& formGroup.get('edad').touched">La edad debe ser mayo a 18 y menor a 99</small>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label for="sexo" class="form-label">Contraseña</label>
+          <input type="text" class="form-control" id="sexo" formControlName="contraseña" placeholder="Ingrese contraseña"/>
+          <small class="invalid" *ngIf="formGroup.get('contraseña').errors?.required  && formGroup.get('contraseña').touched">La contraseña es requerido</small>
+        </div>
+        <div class="col-md-12 mb-5">
+          <label for="email" class="form-label">Email</label>
+          <input type="email" class="form-control" id="email" placeholder="Ingrese email" formControlName="email">
+          <small class="invalid" *ngIf="formGroup.get('email').errors?.required && formGroup.get('email').touched ">El email es requerido</small>
+          <small class="invalid" *ngIf="formGroup.get('email').errors?.email && formGroup.get('email').touched ">El formato es invaldo</small>
+        </div>
+          <div class="col-md-12 mb-5">
+          <label for="dni" class="form-label">Dni</label>
+          <input type="dni" class="form-control" id="dni" placeholder="Ingrese dni" formControlName="dni">
+          <small class="invalid" *ngIf="formGroup.get('dni').errors?.required && formGroup.get('dni').touched ">El dni es requerido</small>
+        </div>
+        <div *ngIf="tipoUsuario == 'paciente'; else especialistaBlock" class="col-md-12 mb-5">
+          <label for="email" class="form-label">Obra Social</label>
+          <input type="email" class="form-control" id="email" placeholder="Ingrese email" formControlName="obraSocial">
+          <small class="invalid" *ngIf="formGroup.get('email').errors?.required && formGroup.get('email').touched ">El email es requerido</small>
+          <small class="invalid" *ngIf="formGroup.get('email').errors?.email && formGroup.get('email').touched ">El formato es invaldo</small>
+        </div>
+        <ng-template #especialistaBlock>
+          <div class="col-md-12 mb-5">
+            <label for="especialidades" class="form-label">Especialidades</label>
+            <select class="form-select" id="sexo" (change)="agregarEsp()" formControlName='especialidad'>
+              <option value="">--Seleccione uno--</option>
+              <option *ngFor="let esp of especialidades" value="{{esp.id}}"> {{esp.name}}</option>              
+              <option value="agregar" >Agregar una especialidad</option>
+            </select>
+          </div>
+        </ng-template>
+      </div>
+      <div class="row">
+        <div *ngIf="showSpinner" class="spinner">
+          <img src="./../../../../assets/giphy.gif">
+        </div>
+        <div class="col-md-12 d-grid gap-2">
+          <button type="submit" class="btn btn-success btn-block" [disabled]="formGroup.invalid">
+            Registrarse
+          </button>
+          <button routerLink='/' type="button" class='btn btn-primary'>Volver al inicio</button>
+
+        </div>
+      </div>
+    </form>
+  </div>
+  
+  <div *ngIf="seAgregoEsp">
+    <app-modal-agregar-especialidad></app-modal-agregar-especialidad>
+  </div>
+
