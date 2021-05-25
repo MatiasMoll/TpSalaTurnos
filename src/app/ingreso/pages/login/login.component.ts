@@ -39,7 +39,9 @@ export class LoginComponent implements OnInit {
 	login(){
 		this.showSpinner = true;
 		this.authService.loginWithEmailAndPassword(this.usrName,this.usrPass);
-		
+		setTimeout(()=>{
+			this.showSpinner = false;
+		},2000);
 		
 	}        
 	clearInputs(){

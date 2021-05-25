@@ -15,6 +15,7 @@ export class AuthService {
     private usersLogged:string = '/userLogged';
     public isLogged:Boolean;
     public static userNameLogged:string;
+    public currentUser;
     public static showSpinner:boolean = false;
     public static tipoUsuarioLogeado:string;
     private dataBase:AngularFirestore;
@@ -55,22 +56,26 @@ export class AuthService {
     //Auth with emailAndPassword
     loginWithEmailAndPassword(name:string,pass:string){
         AuthService.showSpinner = true;
-
-
         this.afAuth.signInWithEmailAndPassword(name,pass)
             .then((result)=>{
-                let loggedUser: AngularFirestoreCollection<any> = this.dataBase.collection(this.usersLogged,ref => ref.where('email','==',name));
-                let usuarioLogeaddo;               
-                loggedUser.valueChanges().subscribe((data)=> {
-                    AuthService.tipoUsuarioLogeado = data[0].tipo;
+                console.log(result.user.emailVerified);
+                if(result.user.emailVerified || result.user.email == 'test@gmail.com'){
+                    let loggedUser: AngularFirestoreCollection<any> = this.dataBase.collection(this.usersLogged,ref => ref.where('email','==',name));
+                    let usuarioLogeaddo;               
+                    loggedUser.valueChanges().subscribe((data)=> {
+                        AuthService.tipoUsuarioLogeado = data[0].tipo;
+                        console.log(AuthService.tipoUsuarioLogeado);
+                        AuthService.showSpinner = false;
+                        console.log(data[0]);
+                        this.router.navigate(['home']);
+                    });            
+                    this.isLogged = true;
+                    //this.UsuariosRef.add({email:name,logged:Date.now()});                
                     console.log(AuthService.tipoUsuarioLogeado);
-                    AuthService.showSpinner = false;
-                    this.router.navigate(['home']);
-                });            
-                this.isLogged = true;
-                //this.UsuariosRef.add({email:name,logged:Date.now()});                
-                console.log(AuthService.tipoUsuarioLogeado);
-                
+                }else{
+                    alert("Email no verificado");
+                   
+                }               
             })
             .catch((res)=>{
                 alert(res);
@@ -81,13 +86,14 @@ export class AuthService {
     
     registroWithEmailAndPassword(name:string,pass:string,email:string,tipoUsuario:string){
         AuthService.showSpinner = true;
+        
         this.afAuth.createUserWithEmailAndPassword(email,pass)
             .then(()=>{
                 this.isLogged = true;
-                this.router.navigate(['home']);
+                this.router.navigate(['login']);
                 this.UsuariosRef.add({email:email,logged:Date.now(),tipo:tipoUsuario})
                 AuthService.showSpinner = false;
-                alert('Usuario registrado correctamente');
+                this.afAuth.currentUser.then(u => u.sendEmailVerification());
             })
             .catch((res)=>{
                 AuthService.showSpinner = false;

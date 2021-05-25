@@ -45,9 +45,15 @@ export class RegistroComponent implements OnInit {
     let email = this.formGroup.controls['email'].value;
     let pass = this.formGroup.controls['contraseña'].value;
     let nombre = this.formGroup.controls['nombre'].value;
-    this.showSpinner = AuthService.showSpinner;
+    this.showSpinner = true;
     this.auth.registroWithEmailAndPassword(nombre,pass,email,this.tipoUsuario);
     this.showSpinner = AuthService.showSpinner;
+    let mensaje = "Se ha enviado un correo de verificacion a la casilla " + email;
+    if(this.tipoUsuario == 'paciente'){
+      alert(mensaje);
+      this.showSpinner = false;
+    } 
+    
   }
 
 
