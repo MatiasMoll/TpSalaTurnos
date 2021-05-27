@@ -1,3 +1,4 @@
+<body [ngClass]=" seAgregoEsp ? '' : ''">
 <div [ngClass]="showSpinner ? 'bodyShadow' : 'container'">
     <form [formGroup]='formGroup' (ngSubmit)="registroWithEmailAndPassword()">
       <div class="row">
@@ -57,21 +58,20 @@
         </ng-template>
       </div>
       <div class="row">
-        <div *ngIf="showSpinner" class="spinner">
-          <img src="./../../../../assets/giphy.gif">
-        </div>
         <div class="col-md-12 d-grid gap-2">
           <button type="submit" class="btn btn-success btn-block" [disabled]="formGroup.invalid">
             Registrarse
           </button>
           <button routerLink='/' type="button" class='btn btn-primary'>Volver al inicio</button>
-
         </div>
       </div>
     </form>
   </div>
-  
-  <div *ngIf="seAgregoEsp">
-    <app-modal-agregar-especialidad></app-modal-agregar-especialidad>
+</body>  
+  <div *ngIf="seAgregoEsp" class="modalAgregar">
+    <app-modal-agregar-especialidad 
+      (eventClose)="seAgregoEsp = !seAgregoEsp"
+      (eventNewSpeciality)="seCreoNuevaEspecialidad($event)"
+    ></app-modal-agregar-especialidad>
   </div>
 

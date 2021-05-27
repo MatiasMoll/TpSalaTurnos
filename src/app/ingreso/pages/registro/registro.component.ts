@@ -66,6 +66,9 @@ export class RegistroComponent implements OnInit {
     }
   }
 
+  seCreoNuevaEspecialidad($event){
+    console.log($event);
+  }
 
   formGroupEspecialista(){
     return this.fb.group({

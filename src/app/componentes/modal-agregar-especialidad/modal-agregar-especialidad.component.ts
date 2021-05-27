@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-modal-agregar-especialidad',
@@ -7,9 +7,25 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ModalAgregarEspecialidadComponent implements OnInit {
 
-  constructor() { }
+  @Output() eventClose:EventEmitter<any>;
+  @Output() eventNewSpeciality:EventEmitter<any>;
+  public nameSpeciality: string = '';
 
-  ngOnInit(): void {
+  constructor() {
+    this.eventNewSpeciality = new EventEmitter<any>();
+    this.eventClose = new EventEmitter<any>();
   }
 
+  ngOnInit(): void {
+
+  }
+
+  eventoCerrar(){
+    this.eventClose.emit();
+  }
+
+  agregarEspecialidad(){
+    console.log(this.nameSpeciality);
+    this.eventNewSpeciality.emit(this.nameSpeciality);
+  }
 }
